@@ -42,7 +42,13 @@ a1 = [ones(m,1) X];
 a2 = [ones(m,1) sigmoid(a1 * Theta1')];
 h = sigmoid(a2 * Theta2');
 y_matrix = (eye(num_labels)(y,:));
+% Unregularized J
 J = sum(sum((-y_matrix .* log(h)) - ((1-y_matrix) .* log(1 - h)))) / m;
+% Regularization Term
+R = sum(sum(Theta1(:,2:end) .^ 2)) + sum(sum(Theta2(:,2:end) .^ 2));
+R = R * lambda / (2 * m);
+% Regulazired J
+J = J + R;
 
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
@@ -60,6 +66,15 @@ J = sum(sum((-y_matrix .* log(h)) - ((1-y_matrix) .* log(1 - h)))) / m;
 %               over the training examples if you are implementing it for the
 %               first time.
 %
+delta_3 = h - y_matrix;
+delta_2 = (delta_3 * Theta2(:,2:end)) .* sigmoidGradient(a1 * Theta1');
+Delta2 = delta_3' * a2;
+Delta1 = delta_2' * a1;
+Theta2_grad = Delta2 / m;
+Theta1_grad = Delta1 / m;
+Theta2_grad = Theta2_grad + [zeros(num_labels,1) (lambda * Theta2(:, 2:end)) / m];
+Theta1_grad = Theta1_grad + [zeros(hidden_layer_size,1) (lambda * Theta1(:, 2:end)) / m];
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
