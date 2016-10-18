@@ -23,7 +23,7 @@ diff_hy = X * theta - y;
 R = sum(theta(2:end) .^ 2) * lambda;
 J = (sum(diff_hy .^ 2) + R) / (2 * m);
 % 1/m term in evidence
-grad  = (X' * diff_hy + [0; theta(2:end)] * lambda) / m
+grad  = (X' * diff_hy + [0; theta(2:end)] * lambda) / m;
 % =========================================================================
 
 grad = grad(:);
